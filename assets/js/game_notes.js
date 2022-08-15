@@ -77,7 +77,7 @@ window.alert("Welcome to Robot Gladiators!");
 //Defining some variables
 let playerName = window.prompt("What is your robot's name?");
 
-var playerHealth = 100;
+var playerHealth = 50;
 var playerAttack = 10;
 var playerMoney = 10;
 
@@ -130,7 +130,7 @@ var booleanDataType = true;
 //Resuming PROJECT, enemy variables
 //Array of robots
 let enemyNames = ['Roborto', 'Amy Android', 'Robo Trumble',]
-let enemyHealth = 50;
+let enemyHealth = 20;
 let enemyAttack = 12;
 
 /*
@@ -165,63 +165,71 @@ for(var i = 0; i < 3; i++) {
 
 //Resume PROJECT
 let fight = function(enemyName) {
-    //Ask player if he/she wants to figth.
-    var promptFight = window.prompt('Would you like to FIGHT or SKIP this battle? Enter "Fight" or "Skip" to choose.');
 
+    /*The while loop is a nother type of control flow statement that loops or repeatedly
+    executes a statement while a condition remains true. Like the for loop, the while loop
+    repeatedly executes a code block only if a condition remains true.
+    E.g.
+    while([Condition]) {
+        statement
+    }
+    */
+    while(enemyHealth > 0) {
+        //Ask player if he/she wants to figth.
+        var promptFight = window.prompt('Would you like to FIGHT or SKIP this battle? Enter "Fight" or "Skip" to choose.');
 
+        //Fight, using or operator || to compare different ways to write fight
+        if (promptFight == 'FIGHT' || promptFight == 'Fight' || promptFight == 'fight'){
+            //Substract playerAttack from enemyHealth, update result in enemyHealth
+            enemyHealth = enemyHealth - playerAttack;
+            console.log(playerName + ' attacked ' + enemyName + '. ' + enemyName + ' now has ' + enemyHealth + ' health remaning.');
 
-    //Fight, using or operator || to compare different ways to write fight
-    if (promptFight == 'FIGHT' || promptFight == 'Fight' || promptFight == 'fight'){
-        //Substract playerAttack from enemyHealth, update result in enemyHealth
-        enemyHealth = enemyHealth - playerAttack;
-        console.log(playerName + ' attacked ' + enemyName + '. ' + enemyName + ' now has ' + enemyHealth + ' health remaning.');
+            //Condition used to check if enemy is alive
+            if (enemyHealth <=0){
+                window.alert(enemyName + ' has died.');
+            }
+            else {
+                window.alert(enemyName + ' has ' + enemyHealth + ' health left.');
+            }
 
-        //Condition used to check if enemy is alive
-        if (enemyHealth <=0){
-            window.alert(enemyName + ' has died.');
+            //Substract enemyAttack from playerHealth, update result in playerHealth
+            playerHealth = playerHealth - enemyAttack;
+            console.log(enemyName + ' attacked ' + playerName + '. ' + playerName + ' now has ' + playerHealth + ' health remaning.');
+
+            //Condition used to check if player is alive
+            if (playerHealth <= 0){
+                window.alert(playerName + ' has died.');
+            }
+            else {
+                window.alert(playerName + ' has ' + playerHealth + ' health left.');
+                fight(enemyNames[i]);
+            }
         }
+
+        //Skip, using or operator || to compare different ways to write skip
+        else if (promptFight == 'SKIP' || promptFight == 'Skip' || promptFight == 'skip'){
+            window.alert(playerName + ' has chosen to skip this fight!');
+            //window.confirm is a built-in browser function that asks the user for input and stores their
+            //response in a variable. Ir requires a simple "OK" or "Cancel" answer.
+            let skipConfirm = window.confirm('Are you sure you want to skip this round?');
+            //If yes, leave fight
+            if(skipConfirm){
+                window.alert(playerName + ' has decided to skip this fight. Goodbye!');
+                playerMoney = playerMoney - 2;
+            }
+            //If no, ask again by running fight() function again
+            else {
+                fight(enemyNames[i]);
+            }
+        }
+
+        //Wrong input from user
         else {
-            window.alert(enemyName + ' has ' + enemyHealth + ' health left.');
-        }
-
-        //Substract enemyAttack from playerHealth, update result in playerHealth
-        playerHealth = playerHealth - enemyAttack;
-        console.log(enemyName + ' attacked ' + playerName + '. ' + playerName + ' now has ' + playerHealth + ' health remaning.');
-
-        //Condition used to check if player is alive
-        if (playerHealth <= 0){
-            window.alert(playerName + ' has died.');
-        }
-        else {
-            window.alert(playerName + ' has ' + playerHealth + ' health left.');
+            window.alert('You did not select "Fight" or "Skip". Please try again.');
             fight(enemyNames[i]);
         }
-    }
-
-    //Skip, using or operator || to compare different ways to write skip
-    else if (promptFight == 'SKIP' || promptFight == 'Skip' || promptFight == 'skip'){
-        window.alert(playerName + ' has chosen to skip this fight!');
-        //window.confirm is a built-in browser function that asks the user for input and stores their
-        //response in a variable. Ir requires a simple "OK" or "Cancel" answer.
-        let skipConfirm = window.confirm('Are you sure you want to skip this round?');
-        //If yes, leave fight
-        if(skipConfirm){
-            window.alert(playerName + ' has decided to skip this fight. Goodbye!');
-            playerMoney = playerMoney - 2;
-        }
-        //If no, ask again by running fight() function again
-        else {
-            fight(enemyNames[i]);
-        }
-    }
-
-    //Wrong input from user
-    else {
-        window.alert('You did not select "Fight" or "Skip". Please try again.');
-        fight(enemyNames[i]);
     }
 }
-
 
 /*
 Pseudocode:
@@ -238,7 +246,11 @@ Additional Pseudo Code
 
 //Resume PROJECT
 for(var i = 0; i < enemyNames.length; i++){
-    fight(enemyNames[i]);
+    debugger;
+    let pickedEnemy = enemyNames[i];
+    enemyHealth = 20;
+    //Call fight function with enemy-robot
+    fight(pickedEnemy);
 
     console.log(enemyNames[i]);
     console.log(i);
