@@ -72,7 +72,7 @@ which we'll learn more about throughout this project and in the coming weeks.
 
 //Starting the PROJECT
 //Alert players that they're starting the round.
-window.alert("Welcome to Robot Gladiators!");
+//window.alert("Welcome to Robot Gladiators!");
 
 //Defining some variables
 let playerName = window.prompt("What is your robot's name?");
@@ -174,9 +174,29 @@ let fight = function(enemyName) {
         statement
     }
     */
-    while(enemyHealth > 0) {
+   //Added && (and operator)
+    while(enemyHealth > 0 && playerHealth > 0) {
         //Ask player if he/she wants to figth.
         var promptFight = window.prompt('Would you like to FIGHT or SKIP this battle? Enter "Fight" or "Skip" to choose.');
+
+        //Skip, using or operator || to compare different ways to write skip
+        if (promptFight == 'SKIP' || promptFight == 'Skip' || promptFight == 'skip'){
+            window.alert(playerName + ' has chosen to skip this fight!');
+            //window.confirm is a built-in browser function that asks the user for input and stores their
+            //response in a variable. Ir requires a simple "OK" or "Cancel" answer.
+            let skipConfirm = window.confirm('Are you sure you would like to quit?');
+            //If yes, leave the fight
+            if(skipConfirm){
+                window.alert(playerName + ' has decided to skip this fight. Goodbye!');
+                playerMoney = playerMoney - 8;
+                console.log("playerMoney", playerMoney);
+                break;
+            }
+            //If no, ask again by running fight() function again
+            else {
+                fight(enemyNames[i]);
+            }
+        }
 
         //Fight, using or operator || to compare different ways to write fight
         if (promptFight == 'FIGHT' || promptFight == 'Fight' || promptFight == 'fight'){
@@ -187,6 +207,10 @@ let fight = function(enemyName) {
             //Condition used to check if enemy is alive
             if (enemyHealth <=0){
                 window.alert(enemyName + ' has died.');
+                playerMoney = playerMoney + 20;
+                playerHealth = playerHealth - enemyAttack;
+                window.alert(playerName + ' has ' + playerHealth + ' health left.');
+                break;
             }
             else {
                 window.alert(enemyName + ' has ' + enemyHealth + ' health left.');
@@ -199,26 +223,15 @@ let fight = function(enemyName) {
             //Condition used to check if player is alive
             if (playerHealth <= 0){
                 window.alert(playerName + ' has died.');
+                /*
+                We need to add a way to stop fighting after meeting playerHealth <= 0.
+                JavaScript has the keyword 'break' that can be used just for this purpose. The break
+                keyword allows us to exit the current loop.
+                */
+               break;
             }
             else {
                 window.alert(playerName + ' has ' + playerHealth + ' health left.');
-                fight(enemyNames[i]);
-            }
-        }
-
-        //Skip, using or operator || to compare different ways to write skip
-        else if (promptFight == 'SKIP' || promptFight == 'Skip' || promptFight == 'skip'){
-            window.alert(playerName + ' has chosen to skip this fight!');
-            //window.confirm is a built-in browser function that asks the user for input and stores their
-            //response in a variable. Ir requires a simple "OK" or "Cancel" answer.
-            let skipConfirm = window.confirm('Are you sure you want to skip this round?');
-            //If yes, leave fight
-            if(skipConfirm){
-                window.alert(playerName + ' has decided to skip this fight. Goodbye!');
-                playerMoney = playerMoney - 2;
-            }
-            //If no, ask again by running fight() function again
-            else {
                 fight(enemyNames[i]);
             }
         }
@@ -246,15 +259,29 @@ Additional Pseudo Code
 
 //Resume PROJECT
 for(var i = 0; i < enemyNames.length; i++){
-    debugger;
+    //Using an if statement to check if playerHealth > 0
+    if (playerHealth > 0) {
+        //Increasing the iterator by one allows the round number to be calculated.
+        window.alert("Welcome to Robot Gladiators! Round " + (i + 1) + " .");
+    }
+    else{
+        window.alert('You have lost your robot in battle! Game Over!"');
+        break;
+    }
+
+    //Reseting health of different robot enemies
     let pickedEnemy = enemyNames[i];
     enemyHealth = 20;
+
+    debugger;
     //Call fight function with enemy-robot
     fight(pickedEnemy);
 
     console.log(enemyNames[i]);
     console.log(i);
     console.log(enemyNames[i] + " is at " + i + " index.");
+
+
 }
 
 /*
