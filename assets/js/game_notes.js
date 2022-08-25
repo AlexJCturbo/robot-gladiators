@@ -71,17 +71,15 @@ which we'll learn more about throughout this project and in the coming weeks.
 //We approach this project as an MVP
 
 //Starting the PROJECT
-//Alert players that they're starting the round.
-//window.alert("Welcome to Robot Gladiators!");
+//Alert players that they're starting the game.
+window.alert("Robot Gladiators!");
 
 //Defining some variables
-let playerName = window.prompt("What is your robot's name?");
-
-var playerHealth = 50;
+var playerName = window.prompt("What is your robot's name?");
+var playerHealth = 100;
 var playerAttack = 10;
 var playerMoney = 10;
-
-console.log(playerName, playerHealth, playerAttack);
+console.log(playerName, playerAttack, playerHealth);
 
 
 /*
@@ -129,8 +127,9 @@ var booleanDataType = true;
 
 //Resuming PROJECT, enemy variables
 //Array of robots
-let enemyNames = ['Roborto', 'Amy Android', 'Robo Trumble',]
-let enemyHealth = 20;
+let enemyNames = ['Roborto', 'Amy Android', 'Robo Trumble'];
+var enemyName = "Roborto"
+let enemyHealth = 50;
 let enemyAttack = 12;
 
 /*
@@ -157,15 +156,14 @@ sequentially from the first line to the last line. Control flow statements, such
 conditional statements or for statements, change the control flow based on the
 statement's conditions.
     */
-for(var i = 0; i < 3; i++) {
-    console.log("Counting i's " + i);
+//for(var i = 0; i < 3; i++) {
+    //console.log("Counting i's " + i);
     //console.log("Counting i's", i);
-}
+//}
 
 
 //Resume PROJECT
 let fight = function(enemyName) {
-
     /*The while loop is a nother type of control flow statement that loops or repeatedly
     executes a statement while a condition remains true. Like the for loop, the while loop
     repeatedly executes a code block only if a condition remains true.
@@ -189,7 +187,7 @@ let fight = function(enemyName) {
             if(skipConfirm){
                 window.alert(playerName + ' has decided to skip this fight. Goodbye!');
                 playerMoney = playerMoney - 8;
-                console.log("playerMoney", playerMoney);
+                console.log("playerMoney =", playerMoney);
                 break;
             }
             //If no, ask again by running fight() function again
@@ -207,9 +205,9 @@ let fight = function(enemyName) {
             //Condition used to check if enemy is alive
             if (enemyHealth <=0){
                 window.alert(enemyName + ' has died.');
-                playerMoney = playerMoney + 20;
                 playerHealth = playerHealth - enemyAttack;
                 window.alert(playerName + ' has ' + playerHealth + ' health left.');
+                playerMoney = playerMoney + 20;
                 break;
             }
             else {
@@ -258,30 +256,58 @@ Additional Pseudo Code
 */
 
 //Resume PROJECT
-for(var i = 0; i < enemyNames.length; i++){
-    //Using an if statement to check if playerHealth > 0
-    if (playerHealth > 0) {
-        //Increasing the iterator by one allows the round number to be calculated.
-        window.alert("Welcome to Robot Gladiators! Round " + (i + 1) + " .");
+let startGame = function(){
+    //We need to reset the player stats every time the game starts
+    playerHealth = 50;
+    playerAttack = 10;
+    playerMoney = 10;
+
+
+    for(var i = 0; i < enemyNames.length; i++){
+        //Using an if statement to check if playerHealth > 0
+        if (playerHealth > 0) {
+                
+            //Increasing the iterator by one allows the round number to be calculated.
+            window.alert("Welcome to Robot Gladiators! Round " + (i + 1) + " .");
+            
+            debugger;
+            
+            let pickedEnemy = enemyNames[i];
+    
+            //Reseting health of different robot enemies
+            enemyHealth = 50;
+
+            //Call fight function with enemy-robot
+            fight(pickedEnemy);
+        }
+        else{
+            window.alert('You have lost your robot in battle! Game Over!"');
+            break;
+        }
+    
+        console.log(enemyNames[i]);
+        console.log(i);
+        console.log(enemyNames[i] + " is at " + i + " index");
+    }
+    //Calling endGame function to ask if play again
+    endGame();
+}
+
+//Start the game when the page loads
+startGame();
+
+//Function to end the game
+let endGame = function(){
+    window.alert("The game has now ended. Let's see how you did!");
+
+    let playAgainConfirm = window.confirm('Would you like to play again?');
+    if(playAgainConfirm){
+        //Reset the game with startGame function
+        startGame();
     }
     else{
-        window.alert('You have lost your robot in battle! Game Over!"');
-        break;
+        window.alert("Thank you for playing Robot Gladiators! Come back soon.");
     }
-
-    //Reseting health of different robot enemies
-    let pickedEnemy = enemyNames[i];
-    enemyHealth = 20;
-
-    debugger;
-    //Call fight function with enemy-robot
-    fight(pickedEnemy);
-
-    console.log(enemyNames[i]);
-    console.log(i);
-    console.log(enemyNames[i] + " is at " + i + " index.");
-
-
 }
 
 /*
@@ -350,4 +376,71 @@ The argument is used when a function is called with a value as an input.
 
 "functionName"("argument");
 wash("Irish Spring"); //=> I wash with Irish Spring, this will be displayed in the console.
+*/
+
+/* IMPORTANT
+Two ways to declare functions:
+
+Function DECLARATION
+E.g.
+function add(a,b){
+    console.log(a+b);
+}
+
+Function EXPRESSION
+E.g.
+var add = function(){
+    console.log(a+b);
+}
+
+The difference between these two ways to declare functions is Hoisiting
+
+HOISTING is JavaScript's default behavior of moving declarations to the top of the code.
+This means that in JavaScript some functions can be called before they are declared.
+
+With function expression we can use the function no matter where in our code, E.g.
+add(5, 6);  //This will log 11.
+function add(a,b){
+    console.log(a+b);
+}
+
+With function expression the order where a function is declared matters, E.g.
+add(5, 6);  //This will output an error because JS tries to call the function before it was declared!
+var add = function(){
+    console.log(a+b);
+}
+
+
+=> Arrow function is similar to function expression
+E.g.
+const greet = () => "Hello World"
+greet() // Hello World
+
+let greet = (x) => console.log("x");
+greet("Welcome to Javascript Arrow functions");
+
+let greet = () => console.log("Welcome to Javascript Arrow functions");
+greet();
+
+Arrow functions also provide better syntax that is more user-friendly for promises and callbacks.
+E.g.
+
+From this sintax:
+asyncFunction()
+    .then(function () {
+    return asyncFunction1();
+    })
+    .then(function () {
+    return asyncFunction2();
+    })
+    .then(function () {
+    // Finish:
+    });
+
+To this sintax:
+asyncFunction()
+    .then(() => asyncFunction1())
+    .then(() => asyncFunction2())
+    .then(() => finish)
+
 */
