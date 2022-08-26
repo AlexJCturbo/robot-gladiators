@@ -131,9 +131,6 @@ let endGame = function() {
 startGame();
 
 
-//Shop
-
-
 /*
 Pseudocode Part 1:
 1. Game States
@@ -157,49 +154,4 @@ Pseudocode Part 2 ("Play again" and "Shop" features):
     - If upgrade, subtract money and increase attack power
     - If leave, alert goodbye and exit the function
     - If any other invalid option, call shop() again
-*/
-
-
-/*
-//Function to start the game
-let startGame = function() {
-    //Reset player stats
-    playerHealth = 100;
-    playerAttack = 10;
-    playerMoney = 10;
-
-    //for loop to fight the different enemies
-    for(var i = 0; i < enemyNames.length; i++){
-        if (playerHealth > 0) {
-            window.alert("Welcome to Robot Gladiators! Round " + (i + 1) + " .");
-            //debugger;
-            let enemyPicked = enemyNames[i];
-            enemyHealth = 50;
-
-            fight(enemyPicked);
-        }
-        else {
-            window.alert('You have lost your robot in battle! Game Over!"');
-            break;
-        }
-    }
-    endGame();
-}
-
-//Start the game when the page loads
-startGame();
-
-//Function to end the game
-let endGame = function(){
-    window.alert("The game has now ended. Let's see how you did!");
-
-    let playAgainConfirm = window.confirm('Would you like to play again?');
-    if(playAgainConfirm){
-        //Reset the game with startGame function
-        startGame();
-    }
-    else{
-        window.alert("Thank you for playing Robot Gladiators! Come back soon.");
-    }
-}
 */
