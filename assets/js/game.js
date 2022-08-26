@@ -12,8 +12,6 @@ Additional Pseudo Code
 - Improve the player's game experience.
 */
 
-window.alert("Robot Gladiators!");
-
 //Defining main variables
 var playerName = window.prompt("What is your robot's name?");
 var playerHealth = 100;
@@ -53,7 +51,6 @@ let fight = function(enemyRobotName) {
                 fight();
             }
         
-
         //If player choses to fight, then fight
         } else if (promptFight === 'FIGHT' || promptFight === 'Fight' || promptFight === 'fight') {
             //debugger;
@@ -101,14 +98,21 @@ let fight = function(enemyRobotName) {
     }
 }
 
-
 for(var i = 0; i < enemyNames.length; i++) {
-    //debugger;
-    let pickedEnemy = enemyNames[i];
-    enemyHealth = 50;
 
-    //Run fight function to start game
-    fight(pickedEnemy);
+    if(playerHealth > 0){
+        window.alert('Welcome to Robot Gladiators! Round ' + (i + 1));
+
+        let pickedEnemy = enemyNames[i];
+        enemyHealth = 50;
+        //debugger;
+
+        //Run fight function to start game
+        fight(pickedEnemy);
+    } else {
+        window.alert('You have lost your robot in battle! Game Over!');
+        break;
+    }
 }
 
 
