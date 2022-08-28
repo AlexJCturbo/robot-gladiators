@@ -290,6 +290,15 @@ let startGame = function() {
 
             //Run fight function to start game
             fight(pickedEnemy);
+
+            //Addingthe code to access the shop after defeating an enemy or skipping a fight
+            if (playerHealth > 0 && i < enemyNames.length - 1) {
+                let storeConfirm = window.confirm("Visit the store before the next round?");
+                if (storeConfirm){
+                    shop();
+                }
+            }
+        //Let the user know his/her robot is dead
         } else {
             window.alert('You have lost your robot in battle! Game Over!');
             break;
@@ -317,6 +326,76 @@ let endGame = function() {
         startGame();
     } else {
         window.alert('Thank you for playing Robot Gladiators! Come back soon!');
+    }
+}
+
+//shop function
+let shop = function() {
+    console.log('Welcome to the shop!');
+    let shopOptions = window.prompt("Would you like to REFILL your health, UPGRADE your attack, or LEAVE the store? Please enter one: 'REFILL', 'UPGRADE', or 'LEAVE' to make a choice.");
+
+    /*
+    Instead of using an if statement, let's aplore the switch function.
+    Because we only have one variable (shopOptions) that can be multiple values,
+    a switch makes sense. The switch function allows us to move between different
+    options depending on the selection made.
+    E.g.
+    var=5
+    switch(num){
+        case 1:
+            console.log('Selected 1');
+            break;
+        case 2:
+            console.log('Selected 2');
+            break;
+        case 3:
+            console.log('Selected 1');
+            break;
+        default:
+            console.log('The variable was something else');
+            break;
+    }
+
+    Use switch statements when checking a single value against multiple possibilities,
+    or cases. In this example, we're defining what should happen when the variable
+    num equals 1, 2, 3, or something else (the default case). Each case ends with
+    a break to specify that nothing more should happen.
+    */
+    switch (shopOptions) {
+        case 'REFILL':
+        case 'Refill':
+        case 'refill':
+            window.alert("Refilling player's health by 20 for 7 dollars.");
+      
+            //Increase health and decrease money
+            playerHealth = playerHealth + 20;
+            playerMoney = playerMoney - 7;
+            break;
+
+        case 'UPGRADE':
+        case 'Upgrade':
+        case 'upgrade':
+            window.alert("Upgrading player's attack by 6 for 7 dollars.");
+      
+            //Increase attack and decrease money
+            playerAttack = playerAttack + 6;
+            playerMoney = playerMoney - 7;
+            break;
+
+        case 'LEAVE':
+        case 'Leave':
+        case 'leave':
+            window.alert("Leaving the store.");
+      
+            //Do nothing, so function will end
+            break;
+            
+        default:
+            window.alert("You did not pick a valid option. Try again.");
+      
+        //Call shop() again so that the player picks a valid option
+            shop();
+            break;
     }
 }
 
