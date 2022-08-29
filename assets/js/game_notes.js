@@ -130,6 +130,15 @@ var booleanDataType = true;
 //Array of robots
 let enemyNames = ['Roborto', 'Amy Android', 'Robo Trumble'];
 //var enemyName = "Roborto"
+
+//By multiplying Math.random()*60, we've now specified a random range from 0 to 59.xx
+//Math.random() will never be 1, so we would never get an even 60
+//let enemyHealth = Math.floor(Math.random()*60);
+
+//Math.random()*21 will give a random decimal number between 0 and 20.xx.
+//Math.floor() will round this number down, so now the range is a whole number between 0 and 20.
+//Adding 40 to the generated number we have our upper limits from 20 to 60.
+//enemyHealth = Math.floor(Math.random() * 21) + 40;
 let enemyHealth = 50;
 let enemyAttack = 12;
 
@@ -162,6 +171,31 @@ statement's conditions.
     //console.log("Counting i's", i);
 //}
 
+// function to generate a random numeric value
+let randomNumber = function(min, max){
+    let randomValue = Math.floor(Math.random()*(max - min + 1) + min);
+
+    //As we write our own methods and functions, they can optionally give something back using a return statement.
+    return randomValue;
+};
+
+enemyAttack = randomNumber(10, 14);
+
+/*
+The return statement actually serves two purposes. Yes, it returns a value, but it also
+ends function execution right then and there. Consider the following example:
+    var doubleIt = function(num) {
+        console.log("beginning of function");
+        var double = num * 2;
+        return double;
+        console.log("end of function");
+    };
+
+    var newNumber = doubleIt(5);            //is now 10
+
+The second console log, "end of function", never happens because the function has returned,
+or ended, before it reached that line. It's similar to using a break statement in a for or while loop.
+*/
 
 //Fight function
 let fight = function(enemyRobotName) {
@@ -193,7 +227,7 @@ let fight = function(enemyRobotName) {
                 if(confirmSkip) {
                     window.alert(playerName + " has decided to skip this fight!")
                     // subtract money from playerMoney for skipping
-                    playerMoney = playerMoney - 10;
+                    playerMoney = Math.max(0, (playerMoney - 10));
                     console.log('Player money: ', playerMoney);
                     break;
             
@@ -207,12 +241,18 @@ let fight = function(enemyRobotName) {
             //debugger;
             
             //Substract playerAttack from enemyHealth, update result in enemyHealth
-            enemyHealth = enemyHealth - playerAttack;
+            //enemyHealth = enemyHealth - playerAttack;
+
+            //If we use something like Math.max(0, variableName), we can ensure that deducted values always stop at zero.
+            //enemyHealth = Math.max(0, enemyHealth - playerAttack);
+
+            //Because randomNumber() returns a value, that returned value can be stored in the enemyHealth variable.
+            enemyHealth = Math.max(0, (enemyHealth - playerAttack));
             console.log(playerName + ' attacked ' + enemyRobotName + '. ' + enemyRobotName + ' now has ' + enemyHealth + ' health remaning.');
 
             //Condition used to check if enemy is alive
             if (enemyHealth <= 0) {
-                playerHealth = playerHealth - enemyAttack;
+                playerHealth = Math.max(0, (playerHealth - enemyAttack));
                 window.alert(enemyRobotName + " has died!");
                 playerMoney = playerMoney + 20;
 
@@ -227,7 +267,7 @@ let fight = function(enemyRobotName) {
             }
 
             //Substract enemyAttack from playerHealth, update result in playerHealth
-            playerHealth = playerHealth - enemyAttack;
+            playerHealth = Math.max(0, (playerHealth - enemyAttack));
             console.log(enemyRobotName + ' attacked ' + playerName + '. ' + playerName + ' now has ' + playerHealth + ' health remaning.');
 
             //Condition used to check if player is alive
@@ -266,12 +306,11 @@ Additional Pseudo Code
 - Improve the player's game experience.
 */
 
-
 //Function to start the game
 let startGame = function() {
     //We need to reset the player stats every time the game starts
     playerHealth = 100;
-    playerAttack= 10;
+    playerAttack= randomNumber((playerAttack - 3), playerAttack);
     playerMoney = 10;
 
 
@@ -285,7 +324,8 @@ let startGame = function() {
             let pickedEnemy = enemyNames[i];
     
             //Reseting health of different robot enemies
-            enemyHealth = 50;
+            //enemyHealth = Math.floor(Math.random()*21) + 40;
+            enemyHealth = randomNumber(40, 60);
             //debugger;
 
             //Run fight function to start game
@@ -369,7 +409,7 @@ let shop = function() {
       
             //Increase health and decrease money
             playerHealth = playerHealth + 20;
-            playerMoney = playerMoney - 7;
+            playerMoney = Math.max(0, (playerMoney - 7));
             break;
 
         case 'UPGRADE':
@@ -379,7 +419,7 @@ let shop = function() {
       
             //Increase attack and decrease money
             playerAttack = playerAttack + 6;
-            playerMoney = playerMoney - 7;
+            playerMoney = Math.max(0, (playerMoney - 7));
             break;
 
         case 'LEAVE':
@@ -461,13 +501,22 @@ as you can see in the following code:
 var "name" = function (parameter)
 var wash = function(soapType) {
  console.log("I wash with " + soapType);
-};
+}; 
 
 When we call the wash() function, we can enter a type of soap into the argument.
 The argument is used when a function is called with a value as an input.
 
 "functionName"("argument");
 wash("Irish Spring"); //=> I wash with Irish Spring, this will be displayed in the console.
+
+An example using the definition of parameters and arguments:
+    addTwoNumbers(number1, number2){        //number1 and number2 are the parameters of the addTwoNumbers function
+        return number1 + number2;
+    };
+
+    addTwoNumbers(4, 6);                    //4 and 6 are the arguments.
+
+
 */
 
 /* IMPORTANT
@@ -534,5 +583,162 @@ asyncFunction()
     .then(() => asyncFunction1())
     .then(() => asyncFunction2())
     .then(() => finish)
+
+*/
+
+
+
+/*
+OBJECT-ORIENTED PROGRAMMING
+
+JavaScript Objects
+JavaScript objects are written with curly braces {}.
+Object properties are written as name:value pairs, separated by commas, E.g.:
+    - const person = {firstName:"John", lastName:"Doe", age:50, eyeColor:"blue"};
+
+It is a programming paradigm centered around objects rather than functions.
+Object oriented languages are diverse, but the most popular ones are class-based languages in which objects are instances of classes.
+Objects contain data, which we also refer to as attributes or properties, and methods. Objects can interact with each other.
+
+JavaScript Objects example
+Object:
+    -Car
+Properties:
+    - car.name = Ford
+    - car.model = Mustang
+    - car.weight = 1200 kg
+    - car.color = red
+Methods:
+    - car.start()
+    - car.drive()
+    - car.brake()
+    - car.stop()
+All cars have the same properties, but the property values differ from car to car.
+All cars have the same methods, but the methods are performed at different times.
+
+Objects are variables too. But objects can contain many values.
+This code assigns many values (Fiat, 500, white) to a variable named car, E.g.:
+    - const car = {type:"Fiat", model:"500", color:"white"};
+The values are written as name:value pairs (name and value separated by a colon).
+
+You define (and create) a JavaScript object with an object literal, E.g.:
+    - const person = {firstName:"John", lastName:"Doe", age:50, eyeColor:"blue"};
+
+Spaces and line breaks are not important. An object definition can span multiple lines, E.g.:
+    - const person = {
+    firstName: "John",
+    lastName: "Doe",
+    age: 50,
+    eyeColor: "blue"
+    };
+
+Object Properties
+The name:values pairs in JavaScript objects are called properties, E.g.:
+    firstName: "John",
+    lastName: "Doe",
+    age: 50,
+
+Accessing Object Properties
+You can access object properties in two ways:
+    - objectName.propertyName
+        or
+    - objectName['propertyName']
+
+Object Methods
+Objects can also have methods.
+Methods are actions that can be performed on objects.
+Methods are stored in properties as function definitions, E.g.:
+
+PROPERTY	    PROPERTY VALUE
+- firstName	    - John
+- lastName	    - Doe
+- age	        - 50
+- eyeColor	    - blue
+- fullName	    - function() {return this.firstName + " " + this.lastName;}
+
+IMPORTANT: A method is a function stored as a property. E.g.:
+    const person = {
+        firstName: "John",
+        lastName : "Doe",
+        id       : 5566,
+        fullName : function() {
+            return this.firstName + " " + this.lastName;
+        }
+    };
+
+IMPORTANT
+In the example above, this refers to the person object.
+I.e. this.firstName means the firstName property of this.
+I.e. this.firstName means the firstName property of person.
+
+What is "this"?
+In JavaScript, the "this" keyword refers to an object.
+Which object depends on how "this" is being invoked (used or called).
+The "this" keyword refers to different objects depending on how it is used:
+    - In an object method, "this" refers to the object.
+    - Alone, "this" refers to the global object.
+    - In a function, "this" refers to the global object. 
+    - In a function, in strict mode, "this" is undefined.
+    - In a function definition, this refers to the "owner" of the function.
+    - In an event, "this" refers to the element that received the event.
+    - Methods like call(), apply(), and bind() can refer "this" to any object.
+
+NOTE
+this is not a variable. It is a keyword. You cannot change the value of this.
+
+Math object
+The Math object has many properties and functions attached to it. When a function belongs to an object, we refer to it as a method.
+    - console.log(Math.PI);                 //prints 3.141592653589793
+    - console.log(Math.round(4.4));         //rounds to the nearest whole number (4)
+    - console.log(Math.sqrt(25));           //prints the square root (5)
+    - console.log(Math.max(10, 20, 100));   //prints 100
+    - console.log(Math.max(0, -50));        //prints 0
+
+Accessing Object Methods
+You access an object method with the following syntax:
+    - objectName.methodName()
+    E.g.:
+        - name = person.fullName();
+
+If you access a method without the () parentheses, it will return the function definition, E.g.:
+    - name = person.fullName;       will return: function() { return this.firstName + " " + this.lastName; }
+
+
+IMPORTANT!
+DO NOT Declare Strings, Numbers, and Booleans as Objects!
+When a JavaScript variable is declared with the keyword "new", the variable is created as an object, E.g.:
+    x = new String();        // Declares x as a String object
+    y = new Number();        // Declares y as a Number object
+    z = new Boolean();       // Declares z as a Boolean object
+
+Avoid String, Number, and Boolean objects. They complicate your code and slow down execution speed.
+
+JavaScript String Methods
+¬ String Length E.g.:
+    - let txt = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    - let length = txt.length;
+
+¬ Extracting String Parts
+There are 3 methods for extracting a part of a string:
+    - slice(start, end)
+    - substring(start, end)
+    - substr(start, length)
+
+¬ Replacing String Content
+The replace() method replaces a specified value with another value in a string, E.g.:
+    - let text = "Please visit Microsoft!";
+    - let newText = text.replace("Microsoft", "W3Schools");
+To replace case insensitive, use a regular expression with an /i flag (insensitive), E.g.:
+    - let text = "Please visit Microsoft!";
+    - let newText = text.replace(/MICROSOFT/i, "W3Schools");
+
+¬ Converting to Upper and Lower Case
+A string is converted to upper case with toUpperCase()
+A string is converted to lower case with toLowerCase()
+
+¬ JavaScript String trim()
+The trim() method removes whitespace from both sides of a string, E.g.:
+    - let text1 = "      Hello World!      ";
+    - let text2 = text1.trim();
 
 */

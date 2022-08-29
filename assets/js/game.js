@@ -3,7 +3,7 @@ var playerName = window.prompt("What is your robot's name?");
 var playerHealth = 100;
 var playerAttack = 10;
 var playerMoney = 10;
-console.log(playerName, playerAttack, playerHealth);
+//console.log(playerName, playerAttack, playerHealth);
 console.log("Your robot's name is " + playerName);
 
 //Enemy variables and array of robots
@@ -12,9 +12,20 @@ let enemyNames = ['Roborto', 'Amy Android', 'Robo Trumble'];
 let enemyHealth = 50;
 let enemyAttack = 12;
 
+//Random Number function
+let randomNumber = function(min, max){
+    let randomValue = Math.floor(Math.random()*(max - min + 1) + min);
+    return randomValue;
+}
+
+enemyAttack = randomNumber(10, 14);
+
+
 //Fight function
 let fight = function(enemyRobotName) {
     //window.alert('Welcome to Robot Gladiators!');
+    console.log(enemyRobotName + " has a total health of " + enemyHealth + ".");
+    console.log(playerName + " has a total health of " + playerHealth + " and a budget of " + playerMoney + ".");
 
     while(enemyHealth > 0 && playerHealth > 0){
         let promptFight = window.prompt("Would you like to FIGHT or SKIP this battle? Enter 'FIGHT' or 'SKIP' to choose.");
@@ -28,7 +39,7 @@ let fight = function(enemyRobotName) {
             if(confirmSkip) {
                 window.alert(playerName + " has decided to skip this fight!")
                 // subtract money from playerMoney for skipping
-                playerMoney = playerMoney - 10;
+                playerMoney = Math.max(0, (playerMoney - 10));
                 console.log('Player money: ', playerMoney);
                 break;
 
@@ -42,12 +53,12 @@ let fight = function(enemyRobotName) {
             //debugger;
 
             //Substract playerAttack from enemyHealth, update result in enemyHealth
-            enemyHealth = enemyHealth - playerAttack;
+            enemyHealth = Math.max(0, (enemyHealth - playerAttack));
             console.log(playerName + ' attacked ' + enemyRobotName + '. ' + enemyRobotName + ' now has ' + enemyHealth + ' health remaning.');
 
             //Check enemy's health
             if (enemyHealth <= 0) {
-                playerHealth = playerHealth - enemyAttack;
+                playerHealth = Math.max(0, (playerHealth - enemyAttack));
                 window.alert(enemyRobotName + " has died!");
                 playerMoney = playerMoney + 20;
 
@@ -63,7 +74,8 @@ let fight = function(enemyRobotName) {
             }
     
             //Substract enemyAttack from playerHealth, update result in playerHealth
-            playerHealth = playerHealth - enemyAttack;
+            playerHealth = Math.max(0, (playerHealth - enemyAttack));
+            console.log("Your Enemy has an attack of " + enemyAttack);
             console.log(enemyRobotName + ' attacked ' + playerName + '. ' + playerName + ' now has ' + playerHealth + ' health remaning.');
 
             //Check player's health
@@ -79,7 +91,7 @@ let fight = function(enemyRobotName) {
         //Wrong input from user
          else {
             window.alert('You did not select "Fight" or "Skip". Please try again.');
-            fight();
+            startGame();
         }
     }
 }
@@ -88,7 +100,8 @@ let fight = function(enemyRobotName) {
 let startGame = function() {
     //Reset player stats
     playerHealth = 100;
-    playerAttack= 10;
+    playerAttack = randomNumber((playerAttack - 3), playerAttack);
+    console.log("You have an attack of " + playerAttack);
     playerMoney = 10;
 
     for(var i = 0; i < enemyNames.length; i++) {
@@ -96,7 +109,7 @@ let startGame = function() {
             window.alert('Welcome to Robot Gladiators! Round ' + (i + 1));
 
             let pickedEnemy = enemyNames[i];
-            enemyHealth = 50;
+            enemyHealth = randomNumber(40, 60);
             //debugger;
 
             //Run fight function to start game
@@ -146,7 +159,7 @@ let shop = function() {
 
                 //Increase health and devrease money
                 playerHealth = playerHealth + 20;
-                playerMoney = playerMoney - 7;
+                playerMoney = Math.max(0, (playerMoney - 7));
             } else {
                 window.alert("You don't have enough money!");
             }
@@ -159,7 +172,7 @@ let shop = function() {
 
             //Icrease attack and decrease money
             playerAttack = playerAttack + 6;
-            playerMoney = playerMoney - 7;
+            playerMoney = Math.max(0, (playerMoney - 7));
             break;
 
         case 'LEAVE':
@@ -205,4 +218,11 @@ Pseudocode Part 2 ("Play again" and "Shop" features):
     - If upgrade, subtract money and increase attack power
     - If leave, alert goodbye and exit the function
     - If any other invalid option, call shop() again
+
+Pseudocode Part 3 (Using Objects):
+- Create a new feature branch.
+- Use the Math object to add randomness to the game.
+- Merge and switch branches.
+- Convert player and enemy data to custom objects.
+- Merge the object branch and update main.
 */
