@@ -79,9 +79,19 @@ let randomNumber = function(min, max){
     return randomValue;
 }
 
+//Function to set name
+let getPlayerName = function(){
+    let name = '';
+    while(name === '' || name === null){
+        name = prompt('What is your robot\'s name?');
+    }
+    console.log("Your robot's name is " + name);
+    return name;
+}
+
 //Defining player object
 let playerInfo = {
-    name: window.prompt("What is your robot's name?"),
+    name: getPlayerName(),
     health: 100,
     attack: 10,
     money: 10,
@@ -111,7 +121,7 @@ let playerInfo = {
         }
     }
 };
-console.log("Your robot's name is " + playerInfo.name);
+//console.log("Your robot's name is " + playerInfo.name);
 
 //Defining enemy object with an array of enemy robots
 let enemyInfo = [
@@ -133,18 +143,15 @@ let enemyInfo = [
 let startGame = function() {
     //Reset player stats usint the reset() method from the playerInfo object
     playerInfo.reset();
-    //playerInfo.health = 100;
-    //playerInfo.attack = randomNumber((playerInfo.attack - 3), playerInfo.attack);
-    //playerInfo.money = 10;
     console.log("You have an attack of " + playerInfo.attack);
 
     for(var i = 0; i < enemyInfo.length; i++) {
         if(playerInfo.health > 0){
             window.alert('Welcome to Robot Gladiators! Round ' + (i + 1));
+            //debugger;
 
             let pickedEnemyObject = enemyInfo[i];
             pickedEnemyObject.health = randomNumber(40, 60);
-            //debugger;
 
             //Run fight function to start game
             fight(pickedEnemyObject);
@@ -247,4 +254,14 @@ Pseudocode Part 3 (Using Objects):
 - Merge and switch branches.
 - Convert player and enemy data to custom objects.
 - Merge the object branch and update main.
+
+Fix the following
+- Empty player names are accepted (validate player prompts by using the while loop).
+- Selecting Cancel in the player-name prompt assigns "null" as the player's name.
+- Empty or mixed-case (for example, Skip, SkIp, skiP, etc.) input to the fight-or-skip prompt results in the fight option being chosen.
+
+Add the following new features:
+- Ability to save the high score (store data by using the Web Storage API.).
+- Randomize who attacks first in each new confrontation (add more variability to the game by using the Math.random() function).
+- Simplify the input process for the shop() prompt to reduce the amount of typing needed to reply to prompts.
 */
