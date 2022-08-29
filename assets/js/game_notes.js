@@ -105,9 +105,40 @@ The second console log, "end of function", never happens because the function ha
 or ended, before it reached that line. It's similar to using a break statement in a for or while loop.
 */
 
+/*
+The following code shows an example of a generic function that will catch incorrect responses:
+    var test = function() {
+        var response = prompt("Question?");
+        if (response === "" || response === null) {
+            window.alert("You need to provide a valid answer! Please try again."); 
+            test();
+        }
+        return response;
+    }
+
+A key statement in this function is the RECURSIVE call, test(), after the alert() in the
+conditional code block. This is known as recursive because the function calls itself.
+It creates a loop that constantly calls itself as long as the conditional statement remains true.
+
+Like while loops, recursive functions must pay special attention to the conditional statement
+to break the loop. Otherwise, a STACK OVERFLOW ERROR will occur, also known as an INFINITE LOOP.
+*/
+
+
+//Function to set name
+let getPlayerName = function(){
+    let name = '';
+    while(name === '' || name === null){
+        name = prompt('What is your robot\'s name?');
+    }
+    console.log("Your robot's name is " + name);
+    return name;
+}
+
+
 //Replacing player variables a for player object
 let playerInfo = {
-    name: window.prompt("What is your robot's name?"),
+    name: getPlayerName(),
     health: 100,
     attack: 10,
     money: 10,
@@ -262,6 +293,46 @@ statement's conditions.
     //console.log("Counting i's", i);
 //}
 
+//Adding a function to handle blank or null responses to the fight-or-skip prompt.
+let fightOrSkip = function(){
+    //Ask player if they'd like to fight or skip using the fightOrSkip() function
+    let promptFight = window.prompt('Would you like to FIGHT or SKIP this battle? Enter "FIGHT" or "SKIP" to choose.');
+    promptFight = promptFight.toLowerCase();
+
+    //Conditional Recursive Function Call
+    // if (promptFight === "" || promptFight === null) {
+    //     window.alert("You need to provide a valid answer! Please try again.");
+    //     return fightOrSkip();
+    // }
+
+    /*
+    There is an alternative shortcut for dealing with non-valid responses: using JavaScript's falsy values.
+    Falsy values are values that evaluate to false in a conditional statement.
+    In JavaScript, they include 0, null, "", undefined, NaN, and false.
+    This shortcut lets you represent all of these non-valid responses in a single expression.
+
+    if the `promptFight` is NOT a valid value, then execute the following statements.
+    */
+    if (!promptFight) {
+        window.alert("You need to provide a valid answer! Please try again.");
+        return fightOrSkip();
+    }
+
+    //if player picks "skip" confirm and then stop the loop
+    if (promptFight === "skip") {       //|| promptFight === "SKIP") {      This can be removed if we only check for lower case
+        //confirm player wants to skip
+        var confirmSkip = window.confirm("Are you sure you'd like to quit?");
+
+        //if yes (true), leave fight
+        if (confirmSkip) {
+            window.alert(playerInfo.name + " has decided to skip this fight. Goodbye!");
+            //Subtract money from playerMoney for skipping
+            playerInfo.playerMoney = playerInfo.money - 10;
+            shop();
+        }
+    }
+}
+
 //Fight function
 //We defined the "enemy" parameter for the function
 let fight = function(enemy) {
@@ -300,7 +371,7 @@ let fight = function(enemy) {
             
             //Not included in the module example
             } else{
-                fight();
+                promptFight;
             }
 
         //Fight, using or operator || to compare different ways to write fight
@@ -357,7 +428,7 @@ let fight = function(enemy) {
         //Wrong input from user
         else {
             window.alert('You did not select "Fight" or "Skip". Please try again.');
-            fight();
+            promptFight;
         }
     }
 }

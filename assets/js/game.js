@@ -6,9 +6,10 @@ let fight = function(enemy) {
 
     while(enemy.health > 0 && playerInfo.health > 0){
         let promptFight = window.prompt("Would you like to FIGHT or SKIP this battle? Enter 'FIGHT' or 'SKIP' to choose.");
+        promptFight = promptFight.toLowerCase();
 
         //If player choses to skip
-        if (promptFight === 'SKIP', promptFight === 'Skip', promptFight === 'skip'){
+        if (promptFight === 'skip'){                //promptFight === 'Skip', promptFight === 'SKIP'
             //Confirm player wants to skip
             var confirmSkip = window.confirm("Are you sure you'd like to quit?");
 
@@ -22,11 +23,11 @@ let fight = function(enemy) {
 
             //Not included in the module example
             } else{
-                fight();
+                promptFight;
             }
         
         //If player choses to fight, then fight
-        } else if (promptFight === 'FIGHT' || promptFight === 'Fight' || promptFight === 'fight') {
+        } else if (promptFight === 'fight') {       //promptFight === 'Fight' || promptFight === 'FIGHT'
             //debugger;
 
             //Substract playerInfo.attack from enemy.health, update result in enemy.health
@@ -66,9 +67,9 @@ let fight = function(enemy) {
         }
 
         //Wrong input from user
-         else {
+        else {
             window.alert('You did not select "Fight" or "Skip". Please try again.');
-            startGame();
+            promptFight;
         }
     }
 }
@@ -121,7 +122,7 @@ let playerInfo = {
         }
     }
 };
-//console.log("Your robot's name is " + playerInfo.name);
+
 
 //Defining enemy object with an array of enemy robots
 let enemyInfo = [
