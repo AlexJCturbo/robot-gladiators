@@ -75,12 +75,75 @@ which we'll learn more about throughout this project and in the coming weeks.
 window.alert("Robot Gladiators!");
 
 //Defining some variables
-var playerName = window.prompt("What is your robot's name?");
-var playerHealth = 100;
-var playerAttack = 10;
-var playerMoney = 10;
-console.log(playerName, playerAttack, playerHealth);
-console.log("Your robot's name is " + playerName);
+//var playerName = window.prompt("What is your robot's name?");
+//var playerHealth = 100;
+//var playerAttack = 10;
+//var playerMoney = 10;
+
+
+// function to generate a random numeric value
+let randomNumber = function(min, max){
+    let randomValue = Math.floor(Math.random()*(max - min + 1) + min);
+
+    //As we write our own methods and functions, they can optionally give something back using a return statement.
+    return randomValue;
+};
+
+/*
+The return statement actually serves two purposes. Yes, it returns a value, but it also
+ends function execution right then and there. Consider the following example:
+    var doubleIt = function(num) {
+        console.log("beginning of function");
+        var double = num * 2;
+        return double;
+        console.log("end of function");
+    };
+
+    var newNumber = doubleIt(5);            //is now 10
+
+The second console log, "end of function", never happens because the function has returned,
+or ended, before it reached that line. It's similar to using a break statement in a for or while loop.
+*/
+
+//Replacing player variables a for player object
+let playerInfo = {
+    name: window.prompt("What is your robot's name?"),
+    health: 100,
+    attack: 10,
+    money: 10,
+
+    //Because reset() is a method that belongs to the playerInfo object, we need a way for the method to self-reference its owner.
+    //this makes reference to the object it is part of.
+    //Using this gives us access to all of the object's properties and its methods, too!
+    //You can think of it as, "this refers to THIS object."
+    reset: function(){
+        this.health = 100;
+        this.money = 10;
+        this.attack = randomNumber((10 - 3), 10);
+    },
+    refillHealth: function(){
+        if(this.money >= 7){
+            window.alert("Refilling player's health by 20 for 7 dollars.");
+            this.health += 20;
+            this.money -= 7;
+        }
+        else {
+            window.alert("You don't have enough money!");
+        }
+    },
+    upgradeAttack: function(){
+        if(this.money >= 7) {
+            window.alert("Upgrading player's attack by 6 for 7 dollars.");
+            this.attack += 6;
+            this.money -= 7;
+        }
+        else{
+            window.alert("You don't have enough money!");
+        }
+    }
+};
+console.log(playerInfo.name, playerInfo.attack, playerInfo.health);
+console.log("Your robot's name is " + playerInfo.name);
 
 
 /*
@@ -97,7 +160,7 @@ method to test code.
 */
 //window.alert(playerName);
 
-console.log("Your robot's name is " + playerName);
+console.log("Your robot's name is " + playerInfo.name);
 /*
 In string concatenation, we can write out a string as we typically would,
 but in order to include variable data, we need to close the string.
@@ -142,6 +205,34 @@ let enemyNames = ['Roborto', 'Amy Android', 'Robo Trumble'];
 let enemyHealth = 50;
 let enemyAttack = 12;
 
+//Defining enemy object with array of enemy robots
+let enemyInfo = [
+    {
+        name: 'Roborto',
+        attack: randomNumber(10, 14),
+
+        //Objects allow us to scale up the app easier
+        //E.g., here we added a new property for this enemy
+        shield: {
+            type: 'wood',
+            streng: 10
+        }
+    },
+    {
+        name: 'Amy Android',
+        attack: randomNumber(10, 14)
+    },
+    {
+        name: 'Robo Trumble',
+        attack: randomNumber(10, 14)
+    }
+    ];
+/*
+Even though the data in the array looks different, it's still an array with numerical indexes.
+That means the first robot object can be accessed as enemyInfo[0], and getting that
+robot's name is as simple as enemyInfo[0].name.
+*/
+
 /*
 JavaScript array is a type of object. It has some useful built-in properties and methods.
 E.g. the length property of the Array object contains the number of elements in the array.
@@ -171,34 +262,10 @@ statement's conditions.
     //console.log("Counting i's", i);
 //}
 
-// function to generate a random numeric value
-let randomNumber = function(min, max){
-    let randomValue = Math.floor(Math.random()*(max - min + 1) + min);
-
-    //As we write our own methods and functions, they can optionally give something back using a return statement.
-    return randomValue;
-};
-
-enemyAttack = randomNumber(10, 14);
-
-/*
-The return statement actually serves two purposes. Yes, it returns a value, but it also
-ends function execution right then and there. Consider the following example:
-    var doubleIt = function(num) {
-        console.log("beginning of function");
-        var double = num * 2;
-        return double;
-        console.log("end of function");
-    };
-
-    var newNumber = doubleIt(5);            //is now 10
-
-The second console log, "end of function", never happens because the function has returned,
-or ended, before it reached that line. It's similar to using a break statement in a for or while loop.
-*/
-
 //Fight function
-let fight = function(enemyRobotName) {
+//We defined the "enemy" parameter for the function
+let fight = function(enemy) {
+    console.log(enemy);
     //window.alert('Welcome to Robot Gladiators!');
 
     /*The while loop is a nother type of control flow statement that loops or repeatedly
@@ -210,7 +277,7 @@ let fight = function(enemyRobotName) {
     }
     */
    //Added && (and operator)
-    while(enemyHealth > 0 && playerHealth > 0){
+    while(enemy.health > 0 && playerInfo.health > 0){
         //Ask player if he/she wants to figth.
         var promptFight = window.prompt("Would you like to FIGHT or SKIP this battle? Enter 'FIGHT' or 'SKIP' to choose.");
 
@@ -225,10 +292,10 @@ let fight = function(enemyRobotName) {
 
                 //If true, leave the fight
                 if(confirmSkip) {
-                    window.alert(playerName + " has decided to skip this fight!")
-                    // subtract money from playerMoney for skipping
-                    playerMoney = Math.max(0, (playerMoney - 10));
-                    console.log('Player money: ', playerMoney);
+                    window.alert(playerInfo.name + " has decided to skip this fight!")
+                    // subtract money from playerInfo.money for skipping
+                    playerInfo.money = Math.max(0, (playerInfo.money - 10));
+                    console.log('Player money: ', playerInfo.money);
                     break;
             
             //Not included in the module example
@@ -247,41 +314,43 @@ let fight = function(enemyRobotName) {
             //enemyHealth = Math.max(0, enemyHealth - playerAttack);
 
             //Because randomNumber() returns a value, that returned value can be stored in the enemyHealth variable.
-            enemyHealth = Math.max(0, (enemyHealth - playerAttack));
-            console.log(playerName + ' attacked ' + enemyRobotName + '. ' + enemyRobotName + ' now has ' + enemyHealth + ' health remaning.');
+            //enemyHealth = Math.max(0, (enemyHealth - playerInfo.attack));
+            enemy.health = Math.max(0, (enemy.health - playerInfo.attack));
+            console.log(playerInfo.name + ' attacked ' + enemy.name + '. ' + enemy.name + ' now has ' + enemy.health + ' health remaning.');
 
             //Condition used to check if enemy is alive
-            if (enemyHealth <= 0) {
-                playerHealth = Math.max(0, (playerHealth - enemyAttack));
-                window.alert(enemyRobotName + " has died!");
-                playerMoney = playerMoney + 20;
+            if (enemy.health <= 0) {
+                playerInfo.health = Math.max(0, (playerInfo.health - enemy.attack));
+                window.alert(enemy.name + " has died!");
+                playerInfo.money = playerInfo.money + 20;
 
                 //Not included in the module example
-                window.alert(playerName + " still has " + playerHealth + " health left.");
-                console.log(enemyRobotName + ' attacked ' + playerName + '. ' + playerName + ' now has ' + playerHealth + ' health remaning.');
+                window.alert(playerInfo.name + " still has " + playerInfo.health + " health left.");
+                console.log(enemy.name + ' attacked ' + playerInfo.name + '. ' + playerInfo.name + ' now has ' + playerInfo.health + ' health remaning.');
 
                 //Leave while loop if enemy is dead
                 break;
             } else {
-                window.alert(enemyRobotName + " still has " + enemyHealth + " health left.");
+                window.alert(enemy.name + " still has " + enemy.health + " health left.");
             }
 
-            //Substract enemyAttack from playerHealth, update result in playerHealth
-            playerHealth = Math.max(0, (playerHealth - enemyAttack));
-            console.log(enemyRobotName + ' attacked ' + playerName + '. ' + playerName + ' now has ' + playerHealth + ' health remaning.');
+            //Substract enemyAttack from playerInfo.health, update result in playerInfo.health
+            //playerInfo.health = Math.max(0, (playerInfo.health - enemyAttack));
+            playerInfo.health = Math.max(0, (playerInfo.health - enemy.attack));
+            console.log(enemy.name + ' attacked ' + playerInfo.name + '. ' + playerInfo.name + ' now has ' + playerInfo.health + ' health remaning.');
 
             //Condition used to check if player is alive
-            if (playerHealth <= 0) {
-                window.alert(playerName + " has died!");
+            if (playerInfo.health <= 0) {
+                window.alert(playerInfo.name + " has died!");
                 /*
-                We need to add a way to stop fighting after meeting playerHealth <= 0.
+                We need to add a way to stop fighting after meeting playerInfo.health <= 0.
                 JavaScript has the keyword 'break' that can be used just for this purpose. The break
                 keyword allows us to exit the current loop.
                 */
                 //Break --> Leave while loop if player is dead
                 break;
             } else {
-                window.alert(playerName + " still has " + playerHealth + " health left.");
+                window.alert(playerInfo.name + " still has " + playerInfo.health + " health left.");
             }
         }
 
@@ -309,30 +378,41 @@ Additional Pseudo Code
 //Function to start the game
 let startGame = function() {
     //We need to reset the player stats every time the game starts
-    playerHealth = 100;
-    playerAttack= randomNumber((playerAttack - 3), playerAttack);
-    playerMoney = 10;
+    //playerInfo.health = 100;
+    //playerInfo.money = 10;
+    //playerInfo.attack = randomNumber((playerInfo.attack - 3), playerInfo.attack);
 
+    //We will use the reset() method from the playerInfo object to reset the values of the player
+    playerInfo.reset();
 
-    for(var i = 0; i < enemyNames.length; i++) {
-        //Using an if statement to check if playerHealth > 0
-        if(playerHealth > 0){
+    for(var i = 0; i < enemyInfo.length; i++) {
+        //Using an if statement to check if playerInfo.health > 0
+        if(playerInfo.health > 0){
                 
             //Increasing the iterator by one allows the round number to be calculated.
             window.alert('Welcome to Robot Gladiators! Round ' + (i + 1));
 
-            let pickedEnemy = enemyNames[i];
-    
+            //let pickedEnemy = enemyNames[i];
+            
+            //Creating enemy object
+            let pickedEnemyObject = enemyInfo[i];
+
             //Reseting health of different robot enemies
             //enemyHealth = Math.floor(Math.random()*21) + 40;
-            enemyHealth = randomNumber(40, 60);
+
+            /*
+            Here we are defining enemy's health for the game as a property of the pickedEbenyObject object
+            and then we pass this health info into the fight() function using the argument (pickedEnemyObject)
+            in the fight function --> fight(pickedEnemyObject)
+            */
+            pickedEnemyObject.health = randomNumber(40, 60);
             //debugger;
 
             //Run fight function to start game
-            fight(pickedEnemy);
+            fight(pickedEnemyObject);
 
             //Addingthe code to access the shop after defeating an enemy or skipping a fight
-            if (playerHealth > 0 && i < enemyNames.length - 1) {
+            if (playerInfo.health > 0 && i < enemyInfo.length - 1) {
                 let storeConfirm = window.confirm("Visit the store before the next round?");
                 if (storeConfirm){
                     shop();
@@ -355,8 +435,8 @@ let startGame = function() {
 //Function to end the game
 let endGame = function() {
     //If player still alive, WIN!
-    if(playerHealth > 0){
-        window.alert("Great job, you've survived the game! You now have a score of " + playerMoney + ".")
+    if(playerInfo.health > 0){
+        window.alert("Great job, you've survived the game! You now have a score of " + playerInfo.money + ".")
     } else {
         window.alert("You've lost your robot in battle.");
     }
@@ -405,21 +485,35 @@ let shop = function() {
         case 'REFILL':
         case 'Refill':
         case 'refill':
-            window.alert("Refilling player's health by 20 for 7 dollars.");
+            //if (playerInfo.money >= 7) {
+                //window.alert("Refilling player's health by 20 for 7 dollars.");
       
-            //Increase health and decrease money
-            playerHealth = playerHealth + 20;
-            playerMoney = Math.max(0, (playerMoney - 7));
+                //Increase health and decrease money
+                //playerInfo.health = playerInfo.health + 20;
+                //playerInfo.money = Math.max(0, (playerInfo.money - 7));
+            //} else {
+                //window.alert("You don't have enough money!");
+            //}
+
+            //We will be using the methods from the playerInfo object to improve the code instead of using all the previous coding
+            playerInfo.refillHealth();
             break;
 
         case 'UPGRADE':
         case 'Upgrade':
         case 'upgrade':
-            window.alert("Upgrading player's attack by 6 for 7 dollars.");
+            //if (playerInfo.money >= 7) {
+                //window.alert("Upgrading player's attack by 6 for 7 dollars.");
       
-            //Increase attack and decrease money
-            playerAttack = playerAttack + 6;
-            playerMoney = Math.max(0, (playerMoney - 7));
+                //Increase attack and decrease money
+                //playerInfo.attack = playerInfo.attack + 6;
+                //playerInfo.money = Math.max(0, (playerInfo.money - 7));
+            //} else {
+                //window.alert("You don't have enough money!");
+            //}
+            
+            //We will be using the methods from the playerInfo object to improve the code instead of using all the previous coding
+            playerInfo.upgradeAttack();
             break;
 
         case 'LEAVE':
@@ -596,6 +690,23 @@ JavaScript objects are written with curly braces {}.
 Object properties are written as name:value pairs, separated by commas, E.g.:
     - const person = {firstName:"John", lastName:"Doe", age:50, eyeColor:"blue"};
 
+Objects can have properties (Math.PI) and methods/functions (Math.random()).
+There are many other built-in JavaScript objects that we'll discover over time,
+and we can even make our own custom objects, E.g.:
+    var food = {
+        name: "Banana",
+        type: "fruit",
+        calories: 105
+    };
+
+object properties are defined within using <propertyName>: <propertyValue> syntax and separated by a comma.
+The following code shows how to access the property values of a food object:
+
+    console.log(food.name);     // "Banana"
+    console.log(food.type);     // "fruit"
+    console.log(food.calories); // 105
+
+
 It is a programming paradigm centered around objects rather than functions.
 Object oriented languages are diverse, but the most popular ones are class-based languages in which objects are instances of classes.
 Objects contain data, which we also refer to as attributes or properties, and methods. Objects can interact with each other.
@@ -629,14 +740,18 @@ Spaces and line breaks are not important. An object definition can span multiple
     firstName: "John",
     lastName: "Doe",
     age: 50,
-    eyeColor: "blue"
     };
 
 Object Properties
-The name:values pairs in JavaScript objects are called properties, E.g.:
-    firstName: "John",
-    lastName: "Doe",
+The name:values pairs in JavaScript objects are propertyNames: propertyValues, E.g.:
+    firstName: "John",      //property name = firstName; propertyValue = John
+    lastName: "Doe",        //property name = LastName; propertyValue = Doe
     age: 50,
+
+Adding properties
+We can add properties to an object by declaring the object.newProperty, E.g.:
+    person.eyeColor = "blue";   //This add the eyeColor property to the object
+    console.log(person);        //{firstName: "John", lastName: "Doe", age: 50, eyeColor: "blue"}
 
 Accessing Object Properties
 You can access object properties in two ways:
@@ -644,9 +759,12 @@ You can access object properties in two ways:
         or
     - objectName['propertyName']
 
-Object Methods
+
+OBJECT METHODS
 Objects can also have methods.
-Methods are actions that can be performed on objects.
+
+IMPORTANT
+Methods are actions that can be performed on objects. In other words, FUNCTIONS!
 Methods are stored in properties as function definitions, E.g.:
 
 PROPERTY	    PROPERTY VALUE
@@ -656,7 +774,7 @@ PROPERTY	    PROPERTY VALUE
 - eyeColor	    - blue
 - fullName	    - function() {return this.firstName + " " + this.lastName;}
 
-IMPORTANT: A method is a function stored as a property. E.g.:
+A method is a function stored as a property. E.g.:
     const person = {
         firstName: "John",
         lastName : "Doe",
@@ -685,6 +803,19 @@ The "this" keyword refers to different objects depending on how it is used:
 
 NOTE
 this is not a variable. It is a keyword. You cannot change the value of this.
+
+Another example of objects, properties and methods:
+    let myCar = {
+        make: 'toyota',
+        model: 'corolla',
+        mileage: '15000',
+        driveToWork: function(){
+            return mileage += 25;
+        }
+    };
+
+    myCar.driveToWork();        //When we call the driveToWork method it adds 25 miles to the car
+    console.log(myCar);         //{make: 'toyota', model: 'corolla', mileage: '15025', driveToWork: [Function: driveToWork]}
 
 Math object
 The Math object has many properties and functions attached to it. When a function belongs to an object, we refer to it as a method.
