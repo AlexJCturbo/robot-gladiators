@@ -523,8 +523,10 @@ let endGame = function() {
 //shop function
 let shop = function() {
     console.log('Welcome to the shop!');
-    let shopOptions = window.prompt("Would you like to REFILL your health, UPGRADE your attack, or LEAVE the store? Please enter one: 'REFILL', 'UPGRADE', or 'LEAVE' to make a choice.");
-
+    let shopOptions = window.prompt("Would you like to REFILL your health, UPGRADE your attack, or LEAVE the store? Please enter 1 for 'REFILL', 2 for 'UPGRADE', or 3 for 'LEAVE'.");
+    
+    //The parseInt() function converts strings to integers.
+    shopOptions = parseInt(shopOptions);
     /*
     Instead of using an if statement, let's aplore the switch function.
     Because we only have one variable (shopOptions) that can be multiple values,
@@ -552,10 +554,8 @@ let shop = function() {
     num equals 1, 2, 3, or something else (the default case). Each case ends with
     a break to specify that nothing more should happen.
     */
-    switch (shopOptions) {
-        case 'REFILL':
-        case 'Refill':
-        case 'refill':
+    switch(shopOptions){
+        case 1:
             //if (playerInfo.money >= 7) {
                 //window.alert("Refilling player's health by 20 for 7 dollars.");
       
@@ -570,9 +570,7 @@ let shop = function() {
             playerInfo.refillHealth();
             break;
 
-        case 'UPGRADE':
-        case 'Upgrade':
-        case 'upgrade':
+        case 2:
             //if (playerInfo.money >= 7) {
                 //window.alert("Upgrading player's attack by 6 for 7 dollars.");
       
@@ -587,9 +585,7 @@ let shop = function() {
             playerInfo.upgradeAttack();
             break;
 
-        case 'LEAVE':
-        case 'Leave':
-        case 'leave':
+        case 3:
             window.alert("Leaving the store.");
       
             //Do nothing, so function will end
