@@ -105,9 +105,40 @@ The second console log, "end of function", never happens because the function ha
 or ended, before it reached that line. It's similar to using a break statement in a for or while loop.
 */
 
+/*
+The following code shows an example of a generic function that will catch incorrect responses:
+    var test = function() {
+        var response = prompt("Question?");
+        if (response === "" || response === null) {
+            window.alert("You need to provide a valid answer! Please try again."); 
+            test();
+        }
+        return response;
+    }
+
+A key statement in this function is the RECURSIVE call, test(), after the alert() in the
+conditional code block. This is known as recursive because the function calls itself.
+It creates a loop that constantly calls itself as long as the conditional statement remains true.
+
+Like while loops, recursive functions must pay special attention to the conditional statement
+to break the loop. Otherwise, a STACK OVERFLOW ERROR will occur, also known as an INFINITE LOOP.
+*/
+
+
+//Function to set name
+let getPlayerName = function(){
+    let name = '';
+    while(name === '' || name === null){
+        name = prompt('What is your robot\'s name?');
+    }
+    console.log("Your robot's name is " + name);
+    return name;
+}
+
+
 //Replacing player variables a for player object
 let playerInfo = {
-    name: window.prompt("What is your robot's name?"),
+    name: getPlayerName(),
     health: 100,
     attack: 10,
     money: 10,
@@ -262,11 +293,63 @@ statement's conditions.
     //console.log("Counting i's", i);
 //}
 
+//Adding a function to handle blank or null responses to the fight-or-skip prompt.
+let fightOrSkip = function(){
+    //Ask player if they'd like to fight or skip using the fightOrSkip() function
+    let promptFight = window.prompt('Would you like to FIGHT or SKIP this battle? Enter "FIGHT" or "SKIP" to choose.');
+    promptFight = promptFight.toLowerCase();
+
+    //Conditional Recursive Function Call
+    // if (promptFight === "" || promptFight === null) {
+    //     window.alert("You need to provide a valid answer! Please try again.");
+    //     return fightOrSkip();
+    // }
+
+    /*
+    There is an alternative shortcut for dealing with non-valid responses: using JavaScript's falsy values.
+    Falsy values are values that evaluate to false in a conditional statement.
+    In JavaScript, they include 0, null, "", undefined, NaN, and false.
+    This shortcut lets you represent all of these non-valid responses in a single expression.
+
+    if the `promptFight` is NOT a valid value, then execute the following statements.
+    */
+    if (!promptFight) {
+        window.alert("You need to provide a valid answer! Please try again.");
+        return fightOrSkip();
+    }
+
+    //if player picks "skip" confirm and then stop the loop
+    if (promptFight === "skip") {       //|| promptFight === "SKIP") {      This can be removed if we only check for lower case
+        //confirm player wants to skip
+        var confirmSkip = window.confirm("Are you sure you'd like to quit?");
+
+        //if yes (true), leave fight
+        if (confirmSkip) {
+            window.alert(playerInfo.name + " has decided to skip this fight. Goodbye!");
+            //Subtract money from playerMoney for skipping
+            playerInfo.playerMoney = playerInfo.money - 10;
+            shop();
+        }
+    }
+}
+
 //Fight function
 //We defined the "enemy" parameter for the function
 let fight = function(enemy) {
     console.log(enemy);
     //window.alert('Welcome to Robot Gladiators!');
+
+    //window.alert('Welcome to Robot Gladiators!');
+    console.log(enemy.name + " has a total health of " + enemy.health + ".");
+    console.log(playerInfo.name + " has a total health of " + playerInfo.health + " and a budget of " + playerInfo.money + ".");
+
+    //To keep track of who goes first
+    let isPlayerTurn = true;
+
+    //To make it random we use the Math.random() function
+    if (Math.random() > 0.5) {
+        isPlayerTurn = false;
+    }
 
     /*The while loop is a nother type of control flow statement that loops or repeatedly
     executes a statement while a condition remains true. Like the for loop, the while loop
@@ -276,13 +359,15 @@ let fight = function(enemy) {
         statement
     }
     */
-   //Added && (and operator)
+    //Added && (and operator)
     while(enemy.health > 0 && playerInfo.health > 0){
+        if(isPlayerTurn) {
         //Ask player if he/she wants to figth.
-        var promptFight = window.prompt("Would you like to FIGHT or SKIP this battle? Enter 'FIGHT' or 'SKIP' to choose.");
+        let promptFight = window.prompt("Would you like to FIGHT or SKIP this battle? Enter 'FIGHT' or 'SKIP' to choose.");
+        promptFight = promptFight.toLowerCase();
 
             //Skip, using or operator || to compare different ways to write skip
-            if (promptFight === 'SKIP', promptFight === 'Skip', promptFight === 'skip'){
+            if (promptFight === 'skip'){
 
                 //window.confirm is a built-in browser function that asks the user for input and stores their
                 //response in a variable. Ir requires a simple "OK" or "Cancel" answer.
@@ -295,53 +380,89 @@ let fight = function(enemy) {
                     window.alert(playerInfo.name + " has decided to skip this fight!")
                     // subtract money from playerInfo.money for skipping
                     playerInfo.money = Math.max(0, (playerInfo.money - 10));
+                    window.alert(playerInfo.name + ' now has ' + playerInfo.money + ' dollars.')
                     console.log('Player money: ', playerInfo.money);
                     break;
             
             //Not included in the module example
-            } else{
-                fight();
-            }
+                } else{
+                    promptFight;
+                }
 
-        //Fight, using or operator || to compare different ways to write fight
-        } else if (promptFight === 'FIGHT' || promptFight === 'Fight' || promptFight === 'fight') {
-            //debugger;
+            //Fight, using or operator || to compare different ways to write fight
+            //If player choses to fight, then fight
+            } else if (promptFight === 'fight') {
+                //debugger;
             
-            //Substract playerAttack from enemyHealth, update result in enemyHealth
-            //enemyHealth = enemyHealth - playerAttack;
+                //Substract playerAttack from enemyHealth, update result in enemyHealth
+                //enemyHealth = enemyHealth - playerAttack;
 
-            //If we use something like Math.max(0, variableName), we can ensure that deducted values always stop at zero.
-            //enemyHealth = Math.max(0, enemyHealth - playerAttack);
+                //If we use something like Math.max(0, variableName), we can ensure that deducted values always stop at zero.
+                //enemyHealth = Math.max(0, enemyHealth - playerAttack);
 
-            //Because randomNumber() returns a value, that returned value can be stored in the enemyHealth variable.
-            //enemyHealth = Math.max(0, (enemyHealth - playerInfo.attack));
-            enemy.health = Math.max(0, (enemy.health - playerInfo.attack));
-            console.log(playerInfo.name + ' attacked ' + enemy.name + '. ' + enemy.name + ' now has ' + enemy.health + ' health remaning.');
+                //Because randomNumber() returns a value, that returned value can be stored in the enemyHealth variable.
+                //enemyHealth = Math.max(0, (enemyHealth - playerInfo.attack));
+                //Substract playerInfo.attack from enemy.health, update result in enemy.health
+                enemy.health = Math.max(0, (enemy.health - playerInfo.attack));
+                window.alert("Youhave an attack of " + playerInfo.attack);
+                console.log(playerInfo.name + ' attacked ' + enemy.name + '. ' + enemy.name + ' now has ' + enemy.health + ' health remaining.');
 
-            //Condition used to check if enemy is alive
-            if (enemy.health <= 0) {
-                playerInfo.health = Math.max(0, (playerInfo.health - enemy.attack));
-                window.alert(enemy.name + " has died!");
-                playerInfo.money = playerInfo.money + 20;
+                //Check enemy's health
+                if (enemy.health <= 0) {
+                    //playerInfo.health = Math.max(0, (playerInfo.health - enemy.attack));
+                    window.alert(enemy.name + " has died!");
+                    playerInfo.money = playerInfo.money + 20;
+                    window.alert(playerInfo.name + ' now has ' + playerInfo.money + ' dollars.')
 
-                //Not included in the module example
-                window.alert(playerInfo.name + " still has " + playerInfo.health + " health left.");
-                console.log(enemy.name + ' attacked ' + playerInfo.name + '. ' + playerInfo.name + ' now has ' + playerInfo.health + ' health remaning.');
+                    if (playerInfo.health > 0){
+                        //Not included in the module example
+                        window.alert(playerInfo.name + " still has " + playerInfo.health + " health left.");
+                    }
 
-                //Leave while loop if enemy is dead
-                break;
-            } else {
-                window.alert(enemy.name + " still has " + enemy.health + " health left.");
+                    //Leave while loop if enemy is dead
+                    break;
+
+                //if enemy.health > 0
+                } else {
+                    window.alert(enemy.name + " still has " + enemy.health + " health left.");
+                    //Substract enemy.attack from playerInfo.health, update result in playerInfo.health
+                    console.log("Your Enemy has an attack of " + enemy.attack);
+                    window.alert("Your Enemy has an attack of " + enemy.attack);
+                    playerInfo.health = Math.max(0, (playerInfo.health - enemy.attack));
+                    console.log(enemy.name + ' attacked ' + playerInfo.name + '. ' + playerInfo.name + ' now has ' + playerInfo.health + ' health remaining.');
+                }
+
+                //Check player's health
+                if (playerInfo.health <= 0) {
+                    window.alert(playerInfo.name + " has died!");
+                    //Leave while loop if player is dead
+                    break;
+                } else {
+                    window.alert(playerInfo.name + " still has " + playerInfo.health + " health left.");
+                }
             }
 
-            //Substract enemyAttack from playerInfo.health, update result in playerInfo.health
-            //playerInfo.health = Math.max(0, (playerInfo.health - enemyAttack));
-            playerInfo.health = Math.max(0, (playerInfo.health - enemy.attack));
-            console.log(enemy.name + ' attacked ' + playerInfo.name + '. ' + playerInfo.name + ' now has ' + playerInfo.health + ' health remaning.');
+            //Wrong input from user
+            else {
+                window.alert('You did not select "Fight" or "Skip". Please try again.');
+                promptFight;
+            }
+        }
 
-            //Condition used to check if player is alive
+
+        //For the case Enemy attacks first
+        else if (!isPlayerTurn){
+            //Substract enemy.attack from playerInfo.health, update result in playerInfo.health
+            console.log("Your Enemy has an attack of " + enemy.attack);
+            window.alert("Your Enemy has an attack of " + enemy.attack);
+            playerInfo.health = Math.max(0, (playerInfo.health - enemy.attack));
+            console.log(enemy.name + ' attacked ' + playerInfo.name + '. ' + playerInfo.name + ' now has ' + playerInfo.health + ' health remaining.');
+
+            //Check player's health
             if (playerInfo.health <= 0) {
                 window.alert(playerInfo.name + " has died!");
+                //Leave while loop if player is dead
+
                 /*
                 We need to add a way to stop fighting after meeting playerInfo.health <= 0.
                 JavaScript has the keyword 'break' that can be used just for this purpose. The break
@@ -349,15 +470,57 @@ let fight = function(enemy) {
                 */
                 //Break --> Leave while loop if player is dead
                 break;
-            } else {
-                window.alert(playerInfo.name + " still has " + playerInfo.health + " health left.");
-            }
-        }
 
-        //Wrong input from user
-        else {
-            window.alert('You did not select "Fight" or "Skip". Please try again.');
-            fight();
+            //If player health > 0
+            } else {
+                window.alert(enemy.name + ' attacked ' + playerInfo.name + '. ' + playerInfo.name + ' now has ' + playerInfo.health + ' health remaining.');
+                let promptFight = window.prompt("Would you like to FIGHT back or SKIP this battle? Enter 'FIGHT' or 'SKIP' to choose.");
+                promptFight = promptFight.toLowerCase();
+                
+                //If player choses to skip
+                if (promptFight === 'skip'){
+                    //Confirm player wants to skip
+                    var confirmSkip = window.confirm("Are you sure you'd like to quit?");
+                    
+                    //If true, leave the fight
+                    if(confirmSkip) {
+                        window.alert(playerInfo.name + " has decided to skip this fight!")
+                        // subtract money from playerInfo.money for skipping
+                        playerInfo.money = Math.max(0, (playerInfo.money - 10));
+                        console.log('Player money: ', playerInfo.money);
+                        window.alert(playerInfo.name + " has " + playerInfo.money + ' dollars left.')
+                        break;
+                    } else{
+                        promptFight;
+                    }
+
+                //If player choses to fight
+                } else if (promptFight === 'fight') {
+                    //debugger;
+                    //Substract playerInfo.attack from enemy.health, update result in enemy.health
+                    enemy.health = Math.max(0, (enemy.health - playerInfo.attack));
+                    console.log(playerInfo.name + ' attacked ' + enemy.name + '. ' + enemy.name + ' now has ' + enemy.health + ' health remaining.');
+
+                    //Check enemy's health
+                    if (enemy.health <= 0) {
+                        window.alert(enemy.name + " has died!");
+                        playerInfo.money = playerInfo.money + 20;
+                        console.log('Player money: ', playerInfo.money);
+                        window.alert(playerInfo.name + ' now has ' + playerInfo.money + ' dolars.');
+                        //Leave while loop if enemy is dead
+                        break;
+            
+                    //If enemy's health > 0
+                    } else {
+                        window.alert(enemy.name + " still has " + enemy.health + " health remaining.");
+                    }
+                
+                //Wrong input from user
+                } else{
+                    window.alert('You did not select "Fight" or "Skip". Please try again.');
+                    promptFight;
+                }
+            }
         }
     }
 }
@@ -452,8 +615,10 @@ let endGame = function() {
 //shop function
 let shop = function() {
     console.log('Welcome to the shop!');
-    let shopOptions = window.prompt("Would you like to REFILL your health, UPGRADE your attack, or LEAVE the store? Please enter one: 'REFILL', 'UPGRADE', or 'LEAVE' to make a choice.");
-
+    let shopOptions = window.prompt("Would you like to REFILL your health, UPGRADE your attack, or LEAVE the store? Please enter 1 for 'REFILL', 2 for 'UPGRADE', or 3 for 'LEAVE'.");
+    
+    //The parseInt() function converts strings to integers.
+    shopOptions = parseInt(shopOptions);
     /*
     Instead of using an if statement, let's aplore the switch function.
     Because we only have one variable (shopOptions) that can be multiple values,
@@ -481,10 +646,8 @@ let shop = function() {
     num equals 1, 2, 3, or something else (the default case). Each case ends with
     a break to specify that nothing more should happen.
     */
-    switch (shopOptions) {
-        case 'REFILL':
-        case 'Refill':
-        case 'refill':
+    switch(shopOptions){
+        case 1:
             //if (playerInfo.money >= 7) {
                 //window.alert("Refilling player's health by 20 for 7 dollars.");
       
@@ -499,9 +662,7 @@ let shop = function() {
             playerInfo.refillHealth();
             break;
 
-        case 'UPGRADE':
-        case 'Upgrade':
-        case 'upgrade':
+        case 2:
             //if (playerInfo.money >= 7) {
                 //window.alert("Upgrading player's attack by 6 for 7 dollars.");
       
@@ -516,9 +677,7 @@ let shop = function() {
             playerInfo.upgradeAttack();
             break;
 
-        case 'LEAVE':
-        case 'Leave':
-        case 'leave':
+        case 3:
             window.alert("Leaving the store.");
       
             //Do nothing, so function will end
