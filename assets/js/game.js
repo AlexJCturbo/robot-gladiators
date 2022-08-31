@@ -254,13 +254,39 @@ let startGame = function() {
 
 //Function to end the game
 let endGame = function() {
+    window.alert("The game has now ended. Let's see how you did!");
+
     //If player still alive, WIN!
     if(playerInfo.health > 0){
-        window.alert("Great job, you've survived the game! You now have a score of " + playerInfo.money + ".")
+        window.alert("Great job, you've survived the game! You have a score of " + playerInfo.money + ".");
     } else {
-        window.alert("You've lost your robot in battle.");
+        window.alert("You've lost your robot in battle. You have a score of " + playerInfo.money + ".");
     }
     
+    //High score
+    let highScore = localStorage.getItem("highscore");
+    if (highScore === null){
+        highScore = 0;
+    }
+    
+    if (playerInfo.money > highScore){
+        localStorage.setItem("highscore", playerInfo.money);
+        localStorage.setItem("name", playerInfo.name);
+        console.log(playerInfo.name + ' has set a new high score of ' + playerInfo.money + '!');
+        window.alert(playerInfo.name + ' has set a new high score of ' + playerInfo.money + '!');
+    }
+    else if (playerInfo.money === highScore){
+        localStorage.setItem("highscore", playerInfo.money);
+        localStorage.setItem("name", playerInfo.name);
+        console.log('You have tied the highest score of ' + playerInfo.money + '. Great job!');
+        window.alert('You have tied the highest score of ' + highScore + '. Great job!');
+    }
+    else{
+        console.log(playerInfo.name + ' did not beat the high score of ' + highScore +'. Keep trying!');
+        window.alert(playerInfo.name + ' did not beat the high score of ' + highScore +'. Keep trying!');
+    }
+
+    //Play again
     let playAgainConfirm = window.confirm('Would you like to play again?');
     if (playAgainConfirm){
         startGame();
