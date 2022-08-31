@@ -597,13 +597,57 @@ let startGame = function() {
 
 //Function to end the game
 let endGame = function() {
+    window.alert("The game has now ended. Let's see how you did!");
+
     //If player still alive, WIN!
     if(playerInfo.health > 0){
-        window.alert("Great job, you've survived the game! You now have a score of " + playerInfo.money + ".")
+        window.alert("Great job, you've survived the game! You have a score of " + playerInfo.money + ".");
     } else {
-        window.alert("You've lost your robot in battle.");
+        window.alert("You've lost your robot in battle. You have a score of " + playerInfo.money + ".");
     }
     
+    //High score
+    /*
+    If highScore is undefined, then its value is null. So, if we want to set highScore to 0
+    if it is undefined, we merely have to test if highScore is null.
+    */
+    let highScore = localStorage.getItem("highscore");
+    if (highScore === null){
+        highScore = 0;
+    }
+
+    /*
+    This type of value check is very common, so there is a shorthand notation called a
+    short circuit conditional statement:
+        highScore = highScore || 0;
+    
+    Here we're using truthy and falsy values in a short-circuit evaluation and assignment:
+    if the variable on the left of the || is truthy, then use it for the assignment value.
+    But if that variable is falsy, then use the value on the right of the || for the
+    assignment value.
+
+    So, our code means that if the highScore value is falsy (for example, null), then
+    assign zero to highScore. If not, retain whatever value is currently stored in highScore.
+    */
+    
+    if (playerInfo.money > highScore){
+        localStorage.setItem("highscore", playerInfo.money);
+        localStorage.setItem("name", playerInfo.name);
+        console.log(playerInfo.name + ' has set a new high score of ' + playerInfo.money + '!');
+        window.alert(playerInfo.name + ' has set a new high score of ' + playerInfo.money + '!');
+    }
+    else if (playerInfo.money === highScore){
+        localStorage.setItem("highscore", playerInfo.money);
+        localStorage.setItem("name", playerInfo.name);
+        console.log('You have tied the highest score of ' + playerInfo.money + '. Great job!');
+        window.alert('You have tied the highest score of ' + highScore + '. Great job!');
+    }
+    else{
+        console.log(playerInfo.name + ' did not beat the high score of ' + highScore +'. Keep trying!');
+        window.alert(playerInfo.name + ' did not beat the high score of ' + highScore +'. Keep trying!');
+    }
+
+    //Play again
     let playAgainConfirm = window.confirm('Would you like to play again?');
     if (playAgainConfirm){
         startGame();
@@ -611,6 +655,33 @@ let endGame = function() {
         window.alert('Thank you for playing Robot Gladiators! Come back soon!');
     }
 }
+
+/*
+Using localStorage
+localStorage allows us to store data in the browser. localStorage only stores strings.
+This means that it forces numbers to become strings E.g.:
+    value: 100,     //100 becomes "100"
+sessionStorage also allows us to save data.
+The difference between the two is that where sessionStorage will persist the data
+during the session of the page or while the browser is open, localStorage will
+persist the data in the browser until the data is manually deleted. This means
+that if you close the browser, the data in sessionStorage will disappear, but
+the data in localStorage will persist.
+Both sessionStorage and localStorage share the same interface methods, and
+both use key-value pairs to store object data. Note that the keys and values will
+always be converted into strings as a condition for browser storage.
+
+Use the Web Storage API
+Using the browser's storage methods to access and enter the object into the browser's
+storage is known as the Web Storage API, E.g.:
+    localStorage.setItem("color", "red");
+
+To see if this statement worked, we can use Chrome DevTools, open the Application tab
+and select the Local Storage option. In the console we can access the info as following:
+    localStorage.getItem("color");              //"red"
+
+
+*/
 
 //shop function
 let shop = function() {
@@ -836,9 +907,7 @@ asyncFunction()
     .then(() => asyncFunction1())
     .then(() => asyncFunction2())
     .then(() => finish)
-
 */
-
 
 
 /*
@@ -858,7 +927,7 @@ and we can even make our own custom objects, E.g.:
         calories: 105
     };
 
-object properties are defined within using <propertyName>: <propertyValue> syntax and separated by a comma.
+object properties (properties may be referred as keys in this case) are defined within using <propertyName>: <propertyValue> syntax and separated by a comma.
 The following code shows how to access the property values of a food object:
 
     console.log(food.name);     // "Banana"
@@ -1030,5 +1099,4 @@ A string is converted to lower case with toLowerCase()
 The trim() method removes whitespace from both sides of a string, E.g.:
     - let text1 = "      Hello World!      ";
     - let text2 = text1.trim();
-
 */
